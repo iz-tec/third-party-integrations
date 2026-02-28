@@ -23,4 +23,18 @@
 hs_err_pid*
 replay_pid*
 
+# IDE
 .idea/
+*.iml
+.vscode/
+
+# Maven build output
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Documents (keep source text, ignore binaries)
+*.pdf
+
+# OS artifacts
+.DS_Store
+Thumbs.db

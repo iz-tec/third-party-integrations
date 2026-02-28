@@ -1,4 +1,4 @@
-name: TNS E2E Auth
+name: TNS E2E Tests
 
 on:
   workflow_dispatch:
@@ -34,4 +34,22 @@ jobs:
             -Dtest=TnsAuthServiceIntegrationTest \
             -Dsurefire.failIfNoSpecifiedTests=false \
             --no-transfer-progress
+
+      - name: Run TNS SIM e2e test
+        env:
+          TNS_BASE_URL: ${{ secrets.TNS_BASE_URL }}
+          TNS_USERNAME: ${{ secrets.TNS_USERNAME }}
+          TNS_PASSWORD: ${{ secrets.TNS_PASSWORD }}
+        run: |
+          mvn -pl integration-tns -am test \
+            -Dtest=TnsSimServiceE2ETest \
+            -Dsurefire.failIfNoSpecifiedTests=false \
+            --no-transfer-progress
+
+      - name: Upload surefire reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: integration-tns/target/surefire-reports/
 

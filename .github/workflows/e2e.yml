@@ -1,0 +1,37 @@
+name: TNS E2E Auth
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'integration-tns/**'
+      - 'common-core/**'
+      - 'common-database/**'
+
+jobs:
+  tns-auth-e2e:
+    name: TNS Auth Integration Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Run TNS auth integration test
+        env:
+          TNS_BASE_URL: ${{ secrets.TNS_BASE_URL }}
+          TNS_USERNAME: ${{ secrets.TNS_USERNAME }}
+          TNS_PASSWORD: ${{ secrets.TNS_PASSWORD }}
+        run: |
+          mvn -pl integration-tns -am test \
+            -Dtest=TnsAuthServiceIntegrationTest \
+            -Dsurefire.failIfNoSpecifiedTests=false \
+            --no-transfer-progress
+

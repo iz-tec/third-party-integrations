@@ -1,0 +1,22 @@
+# Profile used only when running real-API integration tests.
+# Set these env vars before running:
+#   TNS_BASE_URL  — e.g. https://api.lsm-dev.tnsi.com.br
+#   TNS_USERNAME  — your TNS username
+#   TNS_PASSWORD  — your TNS password
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration
+      - org.springframework.boot.autoconfigure.transaction.TransactionAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+
+tns:
+  base-url: ${TNS_BASE_URL:https://api.lsm-dev.tnsi.com.br}
+  username: ${TNS_USERNAME}
+  password: ${TNS_PASSWORD}
+  token-ttl-seconds: 300
+  token-refresh-before-seconds: 30
+

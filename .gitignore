@@ -28,6 +28,8 @@ replay_pid*
 *.iml
 .vscode/
 
+# Local environment — never commit real credentials
+.env
 # Maven build output
 target/
 !.mvn/wrapper/maven-wrapper.jar

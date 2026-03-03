@@ -28,8 +28,8 @@ server:
 
 tns:
   base-url: ${TNS_BASE_URL:https://api.lsm-dev.tnsi.com.br}
-  username: ${TNS_USERNAME:}
-  password: ${TNS_PASSWORD:}
+  username: ${TNS_USERNAME:change-me}
+  password: ${TNS_PASSWORD:change-me}
   token-ttl-seconds: 300
   token-refresh-before-seconds: 30
 

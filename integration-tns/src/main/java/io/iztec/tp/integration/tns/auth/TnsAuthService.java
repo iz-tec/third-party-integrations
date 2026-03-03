@@ -5,6 +5,7 @@ import io.iztec.tp.integration.tns.dto.auth.TnsAuthResponse;
 import io.iztec.tp.integration.tns.exception.TnsAuthException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ public class TnsAuthService {
     private String cachedToken;
     private Instant tokenExpiresAt = Instant.EPOCH;
 
+    @Autowired
     public TnsAuthService(TnsProperties properties) {
         this.properties = properties;
         // Raw client — no auth interceptor, used only for the token endpoint

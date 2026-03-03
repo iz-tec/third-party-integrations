@@ -61,7 +61,6 @@
                         <id>default-test</id>
                         <goals><goal>test</goal></goals>
                         <configuration>
-                            <argLine>--enable-preview</argLine>
                             <excludes>
                                 <exclude>**/*IntegrationTest.java</exclude>
                                 <exclude>**/*E2ETest.java</exclude>
@@ -74,7 +73,6 @@
                         <phase>none</phase>
                         <goals><goal>test</goal></goals>
                         <configuration>
-                            <argLine>--enable-preview</argLine>
                             <includes>
                                 <include>**/*IntegrationTest.java</include>
                                 <include>**/*E2ETest.java</include>

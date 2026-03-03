@@ -8,7 +8,7 @@ This document describes the tech stack, architecture decisions, and coding conve
 
 | Layer | Technology | Version | Notes |
 |---|---|---|---|
-| Language | Java | 21 LTS | Virtual threads enabled via `--enable-preview` |
+| Language | Java | 21 LTS | |
 | Framework | Spring Boot | 3.4.3 | Web, Data JPA, Validation |
 | Build | Maven | 3.x | Multi-module project |
 | Database | PostgreSQL + TimescaleDB | PG 16 | Time-series hypertables for event storage |

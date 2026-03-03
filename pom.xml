@@ -62,8 +62,6 @@
                         <source>${java.version}</source>
                         <target>${java.version}</target>
                         <compilerArgs>
-                            <!-- Enable Java 21 virtual threads and preview features support -->
-                            <arg>--enable-preview</arg>
                             <!-- Preserve parameter names for Spring MVC @PathVariable / @RequestParam binding -->
                             <arg>-parameters</arg>
                         </compilerArgs>
@@ -73,9 +71,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.2.5</version>
-                    <configuration>
-                        <argLine>--enable-preview</argLine>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>

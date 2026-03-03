@@ -1,36 +1,35 @@
 services:
   timescaledb:
-    # Official TimescaleDB image based on PostgreSQL 16
     image: timescale/timescaledb-ha:pg16
     container_name: integrations-timescaledb
     restart: unless-stopped
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5432}:5432"
     environment:
-      POSTGRES_DB: integrations_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${DB_NAME:-integrations_db}
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
     volumes:
       - timescaledb_data:/home/postgres/pgdata/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d integrations_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres} -d ${DB_NAME:-integrations_db}"]
       interval: 10s
       timeout: 5s
       retries: 5
 
   integration-tns:
-    image: ghcr.io/iz-tec/integration-tns:1.0.0-SNAPSHOT
+    image: ghcr.io/iz-tec/integration-tns:${TNS_IMAGE_VERSION:-1.0.0-SNAPSHOT}
     container_name: integration-tns
     restart: unless-stopped
     ports:
       - "8081:8081"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://timescaledb:5432/integrations_db
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: postgres
-      TNS_BASE_URL: ${TNS_BASE_URL}
-      TNS_USERNAME: ${TNS_USERNAME}
-      TNS_PASSWORD: ${TNS_PASSWORD}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://timescaledb:5432/${DB_NAME:-integrations_db}
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME:-postgres}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-postgres}
+      TNS_BASE_URL: ${TNS_BASE_URL:-https://api.lsm-dev.tnsi.com.br}
+      TNS_USERNAME: ${TNS_USERNAME:-change-me}
+      TNS_PASSWORD: ${TNS_PASSWORD:-change-me}
     depends_on:
       timescaledb:
         condition: service_healthy

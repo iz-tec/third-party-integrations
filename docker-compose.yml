@@ -18,6 +18,23 @@ services:
       timeout: 5s
       retries: 5
 
+  integration-tns:
+    image: ghcr.io/iz-tec/integration-tns:1.0.0-SNAPSHOT
+    container_name: integration-tns
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://timescaledb:5432/integrations_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      TNS_BASE_URL: ${TNS_BASE_URL}
+      TNS_USERNAME: ${TNS_USERNAME}
+      TNS_PASSWORD: ${TNS_PASSWORD}
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+
 volumes:
   timescaledb_data:
 

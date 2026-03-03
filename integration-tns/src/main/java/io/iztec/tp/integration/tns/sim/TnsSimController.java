@@ -30,13 +30,13 @@ public class TnsSimController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<TnsSimResponse>> getSimById(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<TnsSimResponse>> getSimById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(ApiResponse.ok(simService.getSimById(id)));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse<TnsSimResponse>> patchSim(
-            @PathVariable Integer id,
+            @PathVariable("id") Integer id,
             @Valid @RequestBody TnsSimPatchRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED)
                 .body(ApiResponse.fail("PATCH /tns/sims is not enabled yet"));

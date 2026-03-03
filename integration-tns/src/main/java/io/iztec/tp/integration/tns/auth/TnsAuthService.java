@@ -47,6 +47,15 @@ public class TnsAuthService {
     }
 
     /**
+     * Package-private constructor for unit tests: accepts a pre-built RestClient mock
+     * so that no real HTTP calls are made.
+     */
+    TnsAuthService(TnsProperties properties, RestClient rawClient) {
+        this.properties = properties;
+        this.rawClient = rawClient;
+    }
+
+    /**
      * Returns a valid JWT token, refreshing it if it is expired or about to expire.
      */
     public synchronized String getValidToken() {

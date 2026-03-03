@@ -53,6 +53,37 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <executions>
+                    <!-- Override default execution: run only unit tests (fast, no credentials) -->
+                    <execution>
+                        <id>default-test</id>
+                        <goals><goal>test</goal></goals>
+                        <configuration>
+                            <argLine>--enable-preview</argLine>
+                            <excludes>
+                                <exclude>**/*IntegrationTest.java</exclude>
+                                <exclude>**/*E2ETest.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                    <!-- Separate execution: run real-API tests only when explicitly triggered -->
+                    <execution>
+                        <id>integration-e2e-tests</id>
+                        <phase>none</phase>
+                        <goals><goal>test</goal></goals>
+                        <configuration>
+                            <argLine>--enable-preview</argLine>
+                            <includes>
+                                <include>**/*IntegrationTest.java</include>
+                                <include>**/*E2ETest.java</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <executions>

@@ -64,6 +64,8 @@
                         <compilerArgs>
                             <!-- Enable Java 21 virtual threads and preview features support -->
                             <arg>--enable-preview</arg>
+                            <!-- Preserve parameter names for Spring MVC @PathVariable / @RequestParam binding -->
+                            <arg>-parameters</arg>
                         </compilerArgs>
                     </configuration>
                 </plugin>

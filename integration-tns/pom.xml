@@ -102,7 +102,7 @@
                          Build:      mvn spring-boot:build-image
                          Custom tag: mvn spring-boot:build-image -Dspring-boot.build-image.imageName=myregistry/integration-tns:latest -->
                     <image>
-                        <name>iztec/${project.artifactId}:${project.version}</name>
+                        <name>ghcr.io/iz-tec/${project.artifactId}:${project.version}</name>
                         <createdDate>now</createdDate>
                     </image>
                 </configuration>

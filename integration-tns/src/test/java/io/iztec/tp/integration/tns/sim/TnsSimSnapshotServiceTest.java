@@ -66,7 +66,7 @@ class TnsSimSnapshotServiceTest {
     void captureAndPersist_withTwoSims_shouldCallUpsertTwice() {
         TnsSimResponse sim1 = buildSim(1, "89001", 1024f, 2048f, 0f);
         TnsSimResponse sim2 = buildSim(2, "89002", 512f, 1024f, 100f);
-        when(simService.listSims(null, null)).thenReturn(List.of(sim1, sim2));
+        when(simService.listAllSims()).thenReturn(List.of(sim1, sim2));
 
         snapshotService.captureAndPersist();
 
@@ -78,7 +78,7 @@ class TnsSimSnapshotServiceTest {
 
     @Test
     void captureAndPersist_withEmptyList_shouldNeverCallUpsert() {
-        when(simService.listSims(null, null)).thenReturn(List.of());
+        when(simService.listAllSims()).thenReturn(List.of());
 
         snapshotService.captureAndPersist();
 
@@ -92,7 +92,7 @@ class TnsSimSnapshotServiceTest {
     void captureAndPersist_allRowsShareTheSameRecordedAt() {
         TnsSimResponse sim1 = buildSim(1, "89001", 1024f, 2048f, 0f);
         TnsSimResponse sim2 = buildSim(2, "89002", 512f, 1024f, 100f);
-        when(simService.listSims(null, null)).thenReturn(List.of(sim1, sim2));
+        when(simService.listAllSims()).thenReturn(List.of(sim1, sim2));
 
         snapshotService.captureAndPersist();
 
@@ -112,7 +112,7 @@ class TnsSimSnapshotServiceTest {
     @Test
     void captureAndPersist_shouldPassCorrectSimIdAndIccid() {
         TnsSimResponse sim = buildSim(42, "89055555", 0f, 20971520f, 0f);
-        when(simService.listSims(null, null)).thenReturn(List.of(sim));
+        when(simService.listAllSims()).thenReturn(List.of(sim));
 
         snapshotService.captureAndPersist();
 

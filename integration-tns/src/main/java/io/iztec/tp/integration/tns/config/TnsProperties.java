@@ -35,5 +35,11 @@ public class TnsProperties {
 
     @Positive
     private int tokenRefreshBeforeSeconds = 30;
+
+    @Positive
+    private int simPageSize = 100;
+
+    @Positive
+    private int simMaxPages = 10;
 }
 

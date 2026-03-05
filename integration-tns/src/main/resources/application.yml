@@ -32,4 +32,6 @@ tns:
   password: ${TNS_PASSWORD:change-me}
   token-ttl-seconds: 300
   token-refresh-before-seconds: 30
+  sim-page-size: ${TNS_SIM_PAGE_SIZE:100}
+  sim-max-pages: ${TNS_SIM_MAX_PAGES:10}
 

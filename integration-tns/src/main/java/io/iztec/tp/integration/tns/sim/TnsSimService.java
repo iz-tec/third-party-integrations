@@ -1,5 +1,6 @@
 package io.iztec.tp.integration.tns.sim;
 
+import io.iztec.tp.integration.tns.config.TnsProperties;
 import io.iztec.tp.integration.tns.dto.sim.TnsSimPatchRequest;
 import io.iztec.tp.integration.tns.dto.sim.TnsSimResponse;
 import io.iztec.tp.integration.tns.exception.TnsSimException;
@@ -12,6 +13,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClient;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,9 +29,12 @@ public class TnsSimService {
     private static final String SIMS_PATH = "/partners/sims/";
 
     private final RestClient tnsRestClient;
+    private final TnsProperties tnsProperties;
 
-    public TnsSimService(@Qualifier("tnsRestClient") RestClient tnsRestClient) {
+    public TnsSimService(@Qualifier("tnsRestClient") RestClient tnsRestClient,
+                         TnsProperties tnsProperties) {
         this.tnsRestClient = tnsRestClient;
+        this.tnsProperties = tnsProperties;
     }
 
     /**
@@ -57,6 +62,43 @@ public class TnsSimService {
             throw new TnsSimException(e.getStatusCode().value(),
                     "TNS SIM list failed (server error): " + e.getResponseBodyAsString());
         }
+    }
+
+    /**
+     * Fetches all SIMs by paginating through the TNS API.
+     * Uses {@code tns.sim-page-size} as the page size and stops when:
+     * <ul>
+     *   <li>a page returns fewer results than the page size, or</li>
+     *   <li>the safety cap of {@code tns.sim-max-pages} iterations is reached.</li>
+     * </ul>
+     */
+    public List<TnsSimResponse> listAllSims() {
+        int pageSize = tnsProperties.getSimPageSize();
+        int maxPages = tnsProperties.getSimMaxPages();
+
+        List<TnsSimResponse> allSims = new ArrayList<>();
+        int page = 0;
+
+        while (page < maxPages) {
+            int offset = page * pageSize;
+            List<TnsSimResponse> batch = listSims(pageSize, offset);
+            allSims.addAll(batch);
+            page++;
+
+            if (batch.size() < pageSize) {
+                log.debug("Last page reached (page={}, returned={})", page, batch.size());
+                break;
+            }
+        }
+
+        if (page >= maxPages) {
+            log.warn("Reached max-pages safety cap ({} pages, {} SIMs fetched). "
+                     + "There may be more SIMs — consider increasing tns.sim-max-pages.",
+                     maxPages, allSims.size());
+        }
+
+        log.info("listAllSims completed: {} SIMs fetched in {} page(s)", allSims.size(), page);
+        return allSims;
     }
 
     /**

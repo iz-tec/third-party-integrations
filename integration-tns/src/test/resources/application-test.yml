@@ -15,4 +15,6 @@ tns:
   password: fake-pass
   token-ttl-seconds: 300
   token-refresh-before-seconds: 30
+  sim-page-size: 100
+  sim-max-pages: 10
 

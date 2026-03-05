@@ -5,6 +5,14 @@ import io.iztec.tp.integration.tns.dto.sim.TnsSimPatchRequest;
 import io.iztec.tp.integration.tns.dto.sim.TnsSimResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration;
+import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.autoconfigure.transaction.TransactionAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -20,13 +28,37 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * Slice test for TnsSimController.
- * Uses @WebMvcTest — only the web layer is loaded; TnsSimService is mocked.
- * TnsSimConsumptionSnapshotRepository is also mocked to prevent Spring Data JPA
- * from trying to create an entityManagerFactory during context loading.
+ *
+ * The nested @SpringBootApplication config replaces TnsApplication for this
+ * test context, keeping @EnableJpaRepositories out of scope so no DataSource
+ * or entityManagerFactory is required.
  */
-@WebMvcTest(TnsSimController.class)
+@WebMvcTest(
+        controllers = TnsSimController.class,
+        excludeAutoConfiguration = {
+                DataSourceAutoConfiguration.class,
+                HibernateJpaAutoConfiguration.class,
+                JpaRepositoriesAutoConfiguration.class,
+                SpringDataWebAutoConfiguration.class,
+                FlywayAutoConfiguration.class,
+                TransactionAutoConfiguration.class,
+                DataSourceTransactionManagerAutoConfiguration.class
+        }
+)
 @ActiveProfiles("test")
 class TnsSimControllerTest {
+
+    /**
+     * Minimal @SpringBootApplication without @EnableJpaRepositories or @EntityScan.
+     * @WebMvcTest finds this nested class first and uses it as the configuration
+     * root instead of scanning up to TnsApplication.
+     */
+    @SpringBootApplication(scanBasePackages = {
+            "io.iztec.tp.commons",
+            "io.iztec.tp.integration.tns"
+    })
+    static class TestConfig {
+    }
 
     @Autowired
     private MockMvc mockMvc;
@@ -97,7 +129,6 @@ class TnsSimControllerTest {
         verify(simService).listSims(10, 2);
     }
 
-
     // --- GET /tns/sims/{id} ---
 
     @Test
@@ -125,7 +156,6 @@ class TnsSimControllerTest {
                 .andExpect(jsonPath("$.success", is(false)))
                 .andExpect(jsonPath("$.error", containsString("not enabled")));
 
-        // service must never be called for PATCH
         verify(simService, never()).patchSim(anyInt(), any());
     }
 
@@ -137,4 +167,3 @@ class TnsSimControllerTest {
                 .andExpect(status().isBadRequest());
     }
 }
-

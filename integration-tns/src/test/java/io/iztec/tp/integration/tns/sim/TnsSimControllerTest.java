@@ -21,7 +21,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Slice test for TnsSimController.
  * Uses @WebMvcTest — only the web layer is loaded; TnsSimService is mocked.
- * The "test" profile disables DataSource / JPA / Flyway auto-configuration.
+ * TnsSimConsumptionSnapshotRepository is also mocked to prevent Spring Data JPA
+ * from trying to create an entityManagerFactory during context loading.
  */
 @WebMvcTest(TnsSimController.class)
 @ActiveProfiles("test")
@@ -35,6 +36,9 @@ class TnsSimControllerTest {
 
     @MockitoBean
     private TnsSimService simService;
+
+    @MockitoBean
+    private TnsSimConsumptionSnapshotRepository snapshotRepository;
 
     // --- helper to build a minimal TnsSimResponse fixture ---
 

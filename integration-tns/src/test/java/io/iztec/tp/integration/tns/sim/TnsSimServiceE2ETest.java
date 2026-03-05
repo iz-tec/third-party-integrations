@@ -43,7 +43,8 @@ class TnsSimServiceE2ETest {
 
     @Test
     void listSims_shouldReturnNonEmptyList() {
-        List<TnsSimResponse> sims = simService.listSims(null, null);
+//        List<TnsSimResponse> sims = simService.listSims(null, null);
+        List<TnsSimResponse> sims = simService.listAllSims();
 
         assertThat(sims)
                 .as("TNS API should return at least one SIM")

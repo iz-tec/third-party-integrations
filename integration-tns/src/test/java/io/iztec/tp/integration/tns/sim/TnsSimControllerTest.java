@@ -60,7 +60,7 @@ class TnsSimControllerTest {
     void listSims_shouldReturn200WithSuccessTrueAndSimList() throws Exception {
         TnsSimResponse sim1 = fakeSim(1, "89001");
         TnsSimResponse sim2 = fakeSim(2, "89002");
-        when(simService.listSims()).thenReturn(List.of(sim1, sim2));
+        when(simService.listSims(null, null)).thenReturn(List.of(sim1, sim2));
 
         mockMvc.perform(get("/tns/sims"))
                 .andExpect(status().isOk())
@@ -72,12 +72,25 @@ class TnsSimControllerTest {
 
     @Test
     void listSims_emptyList_shouldReturn200WithEmptyArray() throws Exception {
-        when(simService.listSims()).thenReturn(List.of());
+        when(simService.listSims(null, null)).thenReturn(List.of());
 
         mockMvc.perform(get("/tns/sims"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success", is(true)))
                 .andExpect(jsonPath("$.data", hasSize(0)));
+    }
+
+    @Test
+    void listSims_withLimitAndOffset_shouldForwardParamsToService() throws Exception {
+        TnsSimResponse sim = fakeSim(5, "89005");
+        when(simService.listSims(10, 2)).thenReturn(List.of(sim));
+
+        mockMvc.perform(get("/tns/sims").param("limit", "10").param("offset", "2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success", is(true)))
+                .andExpect(jsonPath("$.data", hasSize(1)));
+
+        verify(simService).listSims(10, 2);
     }
 
 

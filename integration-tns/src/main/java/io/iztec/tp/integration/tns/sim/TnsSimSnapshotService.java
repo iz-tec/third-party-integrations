@@ -32,7 +32,7 @@ public class TnsSimSnapshotService {
         Instant recordedAt = Instant.now();
         log.info("Capturing SIM consumption snapshot at {}", recordedAt);
 
-        List<TnsSimResponse> sims = simService.listSims();
+        List<TnsSimResponse> sims = simService.listSims(null, null);
         log.debug("Fetched {} SIMs from TNS", sims.size());
 
         for (TnsSimResponse sim : sims) {

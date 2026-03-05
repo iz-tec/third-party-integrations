@@ -33,13 +33,21 @@ public class TnsSimService {
     }
 
     /**
-     * Returns the full list of SIMs available to the partner.
+     * Returns a paginated list of SIMs available to the partner.
+     *
+     * @param limit  max number of results to return (null = no limit sent to TNS)
+     * @param offset number of results to skip (null = no offset sent to TNS)
      */
-    public List<TnsSimResponse> listSims() {
-        log.debug("Fetching all SIMs from TNS");
+    public List<TnsSimResponse> listSims(Integer limit, Integer offset) {
+        log.debug("Fetching SIMs from TNS (limit={}, offset={})", limit, offset);
         try {
             return tnsRestClient.get()
-                    .uri(SIMS_PATH)
+                    .uri(uriBuilder -> {
+                        var builder = uriBuilder.path(SIMS_PATH);
+                        if (limit != null)  builder = builder.queryParam("limit",  limit);
+                        if (offset != null) builder = builder.queryParam("offset", offset);
+                        return builder.build();
+                    })
                     .retrieve()
                     .body(new ParameterizedTypeReference<List<TnsSimResponse>>() {});
         } catch (HttpClientErrorException e) {

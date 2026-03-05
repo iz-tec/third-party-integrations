@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.lang.Nullable;
+
 import java.util.List;
 
 /**
@@ -25,8 +27,10 @@ public class TnsSimController {
     private final TnsSimService simService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<TnsSimResponse>>> listSims() {
-        return ResponseEntity.ok(ApiResponse.ok(simService.listSims()));
+    public ResponseEntity<ApiResponse<List<TnsSimResponse>>> listSims(
+            @RequestParam(required = false) @Nullable Integer limit,
+            @RequestParam(required = false) @Nullable Integer offset) {
+        return ResponseEntity.ok(ApiResponse.ok(simService.listSims(limit, offset)));
     }
 
     @GetMapping("/{id}")

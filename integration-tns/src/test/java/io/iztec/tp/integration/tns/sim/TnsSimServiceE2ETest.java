@@ -43,7 +43,7 @@ class TnsSimServiceE2ETest {
 
     @Test
     void listSims_shouldReturnNonEmptyList() {
-        List<TnsSimResponse> sims = simService.listSims();
+        List<TnsSimResponse> sims = simService.listSims(null, null);
 
         assertThat(sims)
                 .as("TNS API should return at least one SIM")
@@ -54,7 +54,7 @@ class TnsSimServiceE2ETest {
 
     @Test
     void listSims_eachSim_shouldHaveRequiredFields() {
-        List<TnsSimResponse> sims = simService.listSims();
+        List<TnsSimResponse> sims = simService.listSims(null, null);
 
         assertThat(sims).allSatisfy(sim -> {
             assertThat(sim.id()).as("id must not be null").isNotNull();
@@ -66,7 +66,7 @@ class TnsSimServiceE2ETest {
 
     @Test
     void listSims_dataSizeFields_shouldBeNonNegativeBytes() {
-        List<TnsSimResponse> sims = simService.listSims();
+        List<TnsSimResponse> sims = simService.listSims(null, null);
 
         assertThat(sims).allSatisfy(sim -> {
             if (sim.lineTotalF() != null) {
@@ -90,7 +90,7 @@ class TnsSimServiceE2ETest {
     @Test
     void getSimById_shouldReturnCorrectSim() {
         // grab the first SIM from the list to use as a known good ID
-        List<TnsSimResponse> sims = simService.listSims();
+        List<TnsSimResponse> sims = simService.listSims(null, null);
         assertThat(sims).isNotEmpty();
 
         TnsSimResponse first = sims.get(0);
@@ -107,7 +107,7 @@ class TnsSimServiceE2ETest {
     @Disabled("Requires a TNS user with PATCH permission on /partners/sims/. " +
               "The current staging user (cli_simer) only has read access — TNS returns 403.")
     void patchSim_shouldTogglePhaseAndRestoreIt() {
-        List<TnsSimResponse> sims = simService.listSims();
+        List<TnsSimResponse> sims = simService.listSims(null, null);
         assertThat(sims).isNotEmpty();
 
         TnsSimResponse original = sims.get(0);
